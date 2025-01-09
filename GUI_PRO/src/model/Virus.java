@@ -1,37 +1,47 @@
 package model;
 
+import java.util.List;
+
 public class Virus {
-    String manner;
-    float speed;
-    String spreadEffect;
+    private double spreadRate;
+    private double mutationRate;
+    private int infectedCount;
 
-    public Virus(String manner, float speed, String spreadEffect){
-        this.manner = manner;
-        this.speed = speed;
-        this.spreadEffect = spreadEffect;
+    public Virus(double spreadRate, double mutationRate, int infectedCount) {
+        this.spreadRate = spreadRate;
+        this.mutationRate = mutationRate;
+        this.infectedCount = infectedCount;
     }
 
-    public String getManner(){
-        return manner;
+    public double getSpreadRate() { return spreadRate; }
+
+    public void setSpreadRate(double spreadRate) { this.spreadRate = spreadRate; }
+
+    public double getMutationRate() { return mutationRate; }
+
+    public void setMutationRate(double mutationRate) { this.mutationRate = mutationRate; }
+
+    public int getInfectedCount() { return infectedCount; }
+
+    public void setInfectedCount(int infectedCount) { this.infectedCount = infectedCount; }
+
+    public void spread(Country originCountry) {
+        List<TransportRoute> routes = originCountry.getRoutes();
+        if (routes != null) {
+            for (TransportRoute route : routes) {
+                Country destination = route.getEndCountry();
+                double routeEfficiency = route.getEfficiency();
+
+                int infectionsToSpread = (int) (originCountry.getInfectedCount() * spreadRate * routeEfficiency);
+                destination.infect(infectionsToSpread);
+            }
+        }
     }
 
-    public void setManner(String manner) {
-        this.manner = manner;
-    }
-
-    public float getSpeed(){
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
-    public String getSpreadEffect(){
-        return spreadEffect;
-    }
-
-    public void setSpreadEffect(String spreadEffect) {
-        this.spreadEffect = spreadEffect;
+    public void mutate() {
+        spreadRate += spreadRate * mutationRate;
+        if (spreadRate > 1.0) {
+            spreadRate = 1.0;
+        }
     }
 }

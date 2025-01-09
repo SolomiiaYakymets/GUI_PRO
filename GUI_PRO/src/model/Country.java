@@ -3,16 +3,20 @@ package model;
 import java.util.List;
 
 public class Country {
-    String name;
-    int population;
-    int infectedCount;
-    List<TransportRoute> routes;
+    private String name;
+    private int population;
+    private int infectedCount;
+    private List<TransportRoute> routes;
+    private boolean isLockedDown;
+    private double infectionRate;
 
-    public Country(String name, int population, int infectedCount, List<TransportRoute> routes) {
+    public Country(String name, int population, List<TransportRoute> routes) {
         this.name = name;
         this.population = population;
-        this.infectedCount = infectedCount;
+        this.infectedCount = 0;
         this.routes = routes;
+        this.isLockedDown = false;
+        this.infectionRate = 0.1;
     }
 
     public String getName() {
@@ -39,11 +43,37 @@ public class Country {
         this.infectedCount = infectedCount;
     }
 
-    public List<TransportRoute> getRoutes() {
-        return routes;
+    public List<TransportRoute> getRoutes() { return routes; }
+
+    public void setRoutes(List<TransportRoute> routes) { this.routes = routes; }
+
+    public boolean isLockedDown() { return isLockedDown; }
+
+    public void setLockedDown(boolean lockedDown) { isLockedDown = lockedDown; }
+
+    public double getInfectionRate() { return infectionRate; }
+
+    public void setInfectionRate(double infectionRate) { this.infectionRate = infectionRate; }
+
+    public void infect(int infections) {
+        if (!isLockedDown) {
+            infectedCount += infections;
+
+            if (infectedCount > population) {
+                infectedCount = population;
+            }
+        }
     }
 
-    public void setRoutes(List<TransportRoute> routes) {
-        this.routes = routes;
+    public void updateInfection() {
+        if (!isLockedDown) {
+            int newInfections = (int) (infectedCount * infectionRate);
+            infectedCount += newInfections;
+
+            if (infectedCount > population) {
+                infectedCount = population;
+            }
+        }
     }
+
 }
