@@ -9,14 +9,18 @@ public class Country {
     private List<TransportRoute> routes;
     private boolean isLockedDown;
     private double infectionRate;
+    private int x;
+    private int y;
 
-    public Country(String name, int population, List<TransportRoute> routes) {
+    public Country(String name, int population, List<TransportRoute> routes, int x, int y) {
         this.name = name;
         this.population = population;
         this.infectedCount = 0;
         this.routes = routes;
         this.isLockedDown = false;
         this.infectionRate = 0.1;
+        this.x = x;
+        this.y = y;
     }
 
     public String getName() {
@@ -55,6 +59,16 @@ public class Country {
 
     public void setInfectionRate(double infectionRate) { this.infectionRate = infectionRate; }
 
+    public int getX() { return x; }
+
+    public void setX(int x) { this.x = x; }
+
+    public int getY() { return y; }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public void infect(int infections) {
         if (!isLockedDown) {
             infectedCount += infections;
@@ -75,5 +89,6 @@ public class Country {
             }
         }
     }
+
 
 }
