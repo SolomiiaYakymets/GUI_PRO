@@ -2,10 +2,14 @@ package view;
 
 import java.util.List;
 import model.Country;
+import model.GameState;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class GameView extends JFrame{
+    private JLabel timerLabel;
+    private JLabel imageLabel;
 
     public GameView(List<Country> countries) {
 
@@ -23,8 +27,15 @@ public class GameView extends JFrame{
         Image image = imageIcon.getImage();
         Image scaledImage = image.getScaledInstance(800, 600, Image.SCALE_SMOOTH);
         ImageIcon scaledImageIcon = new ImageIcon(scaledImage);
-        JLabel imageLabel = new JLabel(scaledImageIcon);
+
+        imageLabel = new JLabel(scaledImageIcon);
         imageLabel.setLayout(null);
+
+        // Timer display
+        timerLabel = new JLabel("Time: 0 m 0 s");
+        timerLabel.setFont(new Font("Helvetica Neue", Font.BOLD, 18));
+        timerLabel.setBounds(10, 10, 150, 30);
+        panel.add(timerLabel);
 
         // Country buttons
         for (Country country : countries) {
@@ -36,6 +47,12 @@ public class GameView extends JFrame{
         add(panel);
 
         setContentPane(panel);
+    }
+
+    public void updateTimer(int seconds) {
+        int minutes = seconds / 60;
+        int remainingSeconds = seconds % 60;
+        SwingUtilities.invokeLater(() -> timerLabel.setText("Time: " + minutes + " m " + remainingSeconds + " s"));
     }
 
     private JButton createCountryButton(Country country) {
@@ -50,5 +67,33 @@ public class GameView extends JFrame{
 
         button.addActionListener(e -> JOptionPane.showMessageDialog(this, "Clicked: " + country.getName()));
         return button;
+    }
+
+    public void updateView(List<Country> countries) {
+        for (Country country : countries) {
+            for (Component component : imageLabel.getComponents()) {
+                if (component instanceof JButton button) {
+                    if (button.getText().equals(country.getName())) {
+                        updateButtonAppearance(button, country);
+                    }
+                }
+            }
+        }
+        imageLabel.repaint();
+        imageLabel.revalidate();
+    }
+
+    private void updateButtonAppearance(JButton button, Country country) {
+        if (country.isFullyInfected()) {
+            button.setForeground(new Color(153, 0, 0));
+        } else if (country.getInfectedCount() > 0) {
+            button.setForeground(new Color(255, 128, 0));
+        } else {
+            button.setForeground(new Color(0, 100, 0));
+        }
+    }
+
+
+    public void showGameOver() {
     }
 }

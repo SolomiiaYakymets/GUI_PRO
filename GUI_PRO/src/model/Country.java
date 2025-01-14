@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Country {
@@ -9,6 +10,7 @@ public class Country {
     private List<TransportRoute> routes;
     private boolean isLockedDown;
     private double infectionRate;
+    private List<Country> neighbours;
     private int x;
     private int y;
 
@@ -19,6 +21,7 @@ public class Country {
         this.routes = routes;
         this.isLockedDown = false;
         this.infectionRate = 0.1;
+        this.neighbours = new ArrayList<>();
         this.x = x;
         this.y = y;
     }
@@ -59,6 +62,14 @@ public class Country {
 
     public void setInfectionRate(double infectionRate) { this.infectionRate = infectionRate; }
 
+    public List<Country> getNeighbours() {
+        return neighbours;
+    }
+
+    public void setNeighbours(List<Country> neighbours) {
+        this.neighbours = neighbours;
+    }
+
     public int getX() { return x; }
 
     public void setX(int x) { this.x = x; }
@@ -77,6 +88,10 @@ public class Country {
                 infectedCount = population;
             }
         }
+    }
+
+    public boolean isFullyInfected() {
+        return infectedCount >= population;
     }
 
     public void updateInfection() {

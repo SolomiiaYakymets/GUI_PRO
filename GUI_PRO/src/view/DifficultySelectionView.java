@@ -9,6 +9,7 @@ public class DifficultySelectionView extends JDialog {
     public DifficultySelectionView(JFrame parent) {
         super(parent, "AntiPlague Game", true);
         setSize(240, 200);
+        setResizable(false);
         setLocationRelativeTo(parent);
 
         // Text
