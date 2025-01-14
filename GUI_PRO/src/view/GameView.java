@@ -31,9 +31,10 @@ public class GameView extends JFrame{
         imageLabel = new JLabel(scaledImageIcon);
         imageLabel.setLayout(null);
 
-        // Timer display
+        // Timer
         timerLabel = new JLabel("Time: 0 m 0 s");
         timerLabel.setFont(new Font("Helvetica Neue", Font.BOLD, 18));
+        timerLabel.setForeground(Color.DARK_GRAY);
         timerLabel.setBounds(10, 10, 150, 30);
         panel.add(timerLabel);
 
@@ -65,7 +66,17 @@ public class GameView extends JFrame{
         button.setFocusPainted(false);
         button.setFocusable(false);
 
-        button.addActionListener(e -> JOptionPane.showMessageDialog(this, "Clicked: " + country.getName()));
+        ImageIcon icon = new ImageIcon("resources/images/info_icon.png");
+
+        button.addActionListener(e -> JOptionPane.showMessageDialog(
+                this,
+                "Country: " + country.getName()
+                        + "\nPopulation: " + country.getPopulation()
+                        + "\nInfected count: " + country.getInfectedCount(),
+                "Country Information",
+                JOptionPane.INFORMATION_MESSAGE,
+                icon
+        ));
         return button;
     }
 

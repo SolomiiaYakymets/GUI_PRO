@@ -7,7 +7,6 @@ import view.GameView;
 import view.MainMenuView;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.SwingUtilities;
 
 public class GameController {
     private MainMenuView mainMenu;
@@ -50,15 +49,15 @@ public class GameController {
 
     private List<Country> initializeCountries() {
         // Create countries
-        Country spain = new Country("Spain", 47910526, null, 75, 385);
-        Country portugal = new Country("Portugal", 10196709, null, 0, 375);
+        Country spain = new Country("Spain", 47910526, null, 80, 385);
+        Country portugal = new Country("Portugal", 10196709, null, 0, 360);
         Country france = new Country("France", 66548530, null, 218, 245);
-        Country germany = new Country("Germany", 84552242, null, 355, 150);
+        Country germany = new Country("Germany", 84552242, null, 355, 140);
         Country italy = new Country("Italy", 59342867, null, 405,335);
-        Country austria = new Country("Austria", 9027999, null, 440, 230);
-        Country czechRepublic = new Country("Czech Republic", 10493986, null, 445, 180);
+        Country austria = new Country("Austria", 9027999, null, 424, 232);
+        Country czechRepublic = new Country("Czech Republic", 10493986, null, 445, 175);
         Country poland = new Country("Poland", 38539201, null, 505, 115);
-        Country hungary = new Country("Hungary", 9570860, null, 520, 235);
+        Country hungary = new Country("Hungary", 9570860, null, 525, 230);
         Country slovakia = new Country("Slovakia", 5379455, null, 530,190);
         Country romania = new Country("Romania", 19015088, null, 635,245);
 

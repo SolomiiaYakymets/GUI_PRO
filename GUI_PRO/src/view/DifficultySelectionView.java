@@ -12,29 +12,38 @@ public class DifficultySelectionView extends JDialog {
         setResizable(false);
         setLocationRelativeTo(parent);
 
-        // Text
+        // Text 1
         JLabel messageLabel = new JLabel("Choose a difficulty level:");
         messageLabel.setForeground(Color.WHITE);
         messageLabel.setFont(new Font("Helvetica Neue", Font.PLAIN, 16));
 
-        // Button 1
-        JButton easyButton = new JButton("Easy");
-        easyButton.setPreferredSize(new Dimension(160, 36));
-        easyButton.setFont(new java.awt.Font("Helvetica Neue", Font.PLAIN, 14));
+        // Drop-down menu with difficulties
+        String[] difficulties = {"Easy", "Medium", "Hard"};
+        JComboBox<String> difficultyBox = new JComboBox<>(difficulties);
+        difficultyBox.setFont(new Font("Helvetica Neue", Font.PLAIN, 14));
+        difficultyBox.setPreferredSize(new Dimension(166, 42));
 
-        // Button 2
-        JButton mediumButton = new JButton("Medium");
-        mediumButton.setPreferredSize(new Dimension(160, 36));
-        mediumButton.setFont(new java.awt.Font("Helvetica Neue", Font.PLAIN, 14));
+        // Text 2
+        JLabel countryLabel = new JLabel("Choose a starting country:");
+        countryLabel.setForeground(Color.WHITE);
+        countryLabel.setFont(new Font("Helvetica Neue", Font.PLAIN, 16));
 
-        // Button 3
-        JButton hardButton = new JButton("Hard");
-        hardButton.setPreferredSize(new Dimension(160, 36));
-        hardButton.setFont(new java.awt.Font("Helvetica Neue", Font.PLAIN, 14));
+        // Drop-down with countries
+        String[] countries = {"Random", "Spain", "Portugal", "France", "Germany", "Italy", "Austria", "Czech Republic", "Poland", "Hungary", "Slovakia", "Romania"};
+        JComboBox<String> countryBox = new JComboBox<>(countries);
+        countryBox.setFont(new Font("Helvetica Neue", Font.PLAIN, 14));
+        countryBox.setPreferredSize(new Dimension(166, 42));
 
-        easyButton.addActionListener(e -> selectDifficulty("Easy"));
-        mediumButton.addActionListener(e -> selectDifficulty("Medium"));
-        hardButton.addActionListener(e -> selectDifficulty("Hard"));
+        // OK button
+        JButton okButton = new JButton("OK");
+        okButton.setPreferredSize(new Dimension(160, 36));
+        okButton.setFont(new Font("Helvetica Neue", Font.PLAIN, 14));
+
+        // Add action listener to the OK button
+        okButton.addActionListener(e -> {
+            selectedDifficulty = (String) difficultyBox.getSelectedItem();
+            dispose();
+        });
 
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBackground(Color.DARK_GRAY);
@@ -43,28 +52,27 @@ public class DifficultySelectionView extends JDialog {
         gc.weighty = 1;
         gc.gridx = 0;
 
-        // Text
+        // Text 1
         gc.gridy = 0;
         panel.add(messageLabel, gc);
 
-        // Button 1
+        // Drop-down menu with difficulties
         gc.gridy = 1;
-        panel.add(easyButton, gc);
+        panel.add(difficultyBox, gc);
 
-        // Button 2
+        // Text 2
         gc.gridy = 2;
-        panel.add(mediumButton, gc);
+        panel.add(countryLabel, gc);
 
-        // Button 3
+        // Drop-down menu with countries
         gc.gridy = 3;
-        panel.add(hardButton, gc);
+        panel.add(countryBox, gc);
+
+        // Ok button
+        gc.gridy = 4;
+        panel.add(okButton, gc);
 
         add(panel);
-    }
-
-    private void selectDifficulty(String difficulty) {
-        selectedDifficulty = difficulty;
-        dispose();
     }
 
     public String getSelectedDifficulty() {
