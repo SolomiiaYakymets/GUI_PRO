@@ -3,10 +3,11 @@ package view;
 import javax.swing.*;
 import java.awt.*;
 
-public class DifficultySelectionView extends JDialog {
+public class GameSelectionView extends JDialog {
     private String selectedDifficulty;
+    private String selectedCountry;
 
-    public DifficultySelectionView(JFrame parent) {
+    public GameSelectionView(JFrame parent) {
         super(parent, "AntiPlague Game", true);
         setSize(240, 200);
         setResizable(false);
@@ -42,6 +43,7 @@ public class DifficultySelectionView extends JDialog {
         // Add action listener to the OK button
         okButton.addActionListener(e -> {
             selectedDifficulty = (String) difficultyBox.getSelectedItem();
+            selectedCountry = (String) countryBox.getSelectedItem();
             dispose();
         });
 
@@ -78,4 +80,6 @@ public class DifficultySelectionView extends JDialog {
     public String getSelectedDifficulty() {
         return selectedDifficulty;
     }
+
+    public String getSelectedCountry() { return selectedCountry; }
 }

@@ -2,22 +2,23 @@ package controller;
 
 import model.Country;
 import model.GameState;
-import view.DifficultySelectionView;
+import view.GameSelectionView;
 import view.GameView;
+import view.HighScoresView;
 import view.MainMenuView;
-import java.util.Arrays;
 import java.util.List;
 
 public class GameController {
-    private MainMenuView mainMenu;
+    private final MainMenuView mainMenu;
     private GameView gameView;
     private GameState gameState;
-
-    private List<Country> countries;
+    private int totalTime;
+    private final List<Country> countries;
 
     public GameController() {
         this.mainMenu = new MainMenuView();
-        this.countries = initializeCountries();
+        CountryController country = new CountryController();
+        this.countries = country.getCountries();
 
         mainMenu.addNewGameListener(e -> startNewGame(mainMenu));
         mainMenu.addHighScoresListener(e -> showHighScores());
@@ -27,15 +28,19 @@ public class GameController {
     }
 
     private void startNewGame(MainMenuView view) {
-        DifficultySelectionView difficultyDialog = new DifficultySelectionView(view);
-        difficultyDialog.setVisible(true);
+        GameSelectionView selectionDialog = new GameSelectionView(view);
+        selectionDialog.setVisible(true);
 
-        String difficulty = difficultyDialog.getSelectedDifficulty();
+        String difficulty = selectionDialog.getSelectedDifficulty();
+        String startCountry = selectionDialog.getSelectedCountry();
 
         if (difficulty != null) {
+            for (Country country : countries) {
+                country.resetState();
+            }
             view.setVisible(false);
-            this.gameState = new GameState(countries, difficulty);
-            GameView gameView = new GameView(countries);
+            this.gameState = new GameState(countries, difficulty, startCountry);
+            this.gameView = new GameView(countries, gameState);
             gameView.setVisible(true);
 
             startTimer(gameView);
@@ -44,39 +49,8 @@ public class GameController {
     }
 
     private void showHighScores() {
-        System.out.println("Displaying high scores...");
-    }
-
-    private List<Country> initializeCountries() {
-        // Create countries
-        Country spain = new Country("Spain", 47910526, null, 80, 385);
-        Country portugal = new Country("Portugal", 10196709, null, 0, 360);
-        Country france = new Country("France", 66548530, null, 218, 245);
-        Country germany = new Country("Germany", 84552242, null, 355, 140);
-        Country italy = new Country("Italy", 59342867, null, 405,335);
-        Country austria = new Country("Austria", 9027999, null, 424, 232);
-        Country czechRepublic = new Country("Czech Republic", 10493986, null, 445, 175);
-        Country poland = new Country("Poland", 38539201, null, 505, 115);
-        Country hungary = new Country("Hungary", 9570860, null, 525, 230);
-        Country slovakia = new Country("Slovakia", 5379455, null, 530,190);
-        Country romania = new Country("Romania", 19015088, null, 635,245);
-
-        // Add neighbours
-        spain.setNeighbours(Arrays.asList(portugal, france));
-        portugal.setNeighbours(List.of(spain));
-        france.setNeighbours(Arrays.asList(spain, italy, germany));
-        germany.setNeighbours(Arrays.asList(france, poland, czechRepublic, austria));
-        italy.setNeighbours(Arrays.asList(france, austria));
-        austria.setNeighbours(Arrays.asList(italy, germany, czechRepublic, slovakia, hungary));
-        czechRepublic.setNeighbours(Arrays.asList(germany, austria, hungary, slovakia, poland));
-        poland.setNeighbours(Arrays.asList(germany, czechRepublic, slovakia));
-        hungary.setNeighbours(Arrays.asList(austria, slovakia, romania));
-        slovakia.setNeighbours(Arrays.asList(poland, czechRepublic, austria, czechRepublic));
-        romania.setNeighbours(List.of(hungary));
-
-        countries = Arrays.asList(spain, portugal, france, germany, italy, austria, czechRepublic, poland, hungary, slovakia, romania);
-
-        return countries;
+        HighScoresView highScores = new HighScoresView();
+        highScores.setVisible(true);
     }
 
     private void startVirusBehavior(GameView gameView) {
@@ -87,7 +61,7 @@ public class GameController {
                 virusController.spreadInfectionWithinCountries(gameState.getCountries());
                 virusController.spreadInfectionBetweenCountries(gameState.getCountries());
 
-                gameView.updateView(gameState.getCountries());
+                gameView.updateView();
 
                 if (Math.random() < 0.1) {
                     virusController.mutateVirus();
@@ -99,7 +73,7 @@ public class GameController {
                     e.printStackTrace();
                 }
             }
-            gameView.showGameOver();
+            gameView.showGameOver(totalTime, gameState.getDifficulty(), gameState.isWin());
             endGame();
         }).start();
     }
@@ -110,20 +84,23 @@ public class GameController {
             while (!gameState.isGameOver()) {
                 try {
                     Thread.sleep(1000);
+                    gameState.addPoints();
                     timeElapsed++;
+                    gameView.updatePoints(gameState.getPoints());
                     gameView.updateTimer(timeElapsed);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            System.out.println("Game Over! Final time: " + timeElapsed + " seconds.");
+            totalTime = timeElapsed;
         }).start();
     }
 
 
-
     private void endGame() {
         gameView.setVisible(false);
+        gameView = null;
+        gameState = null;
         mainMenu.setVisible(true);
     }
 
